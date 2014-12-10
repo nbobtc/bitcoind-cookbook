@@ -1,0 +1,7 @@
+name             'bitcoind'
+maintainer       'Joshua Estes'
+maintainer_email ''
+license          'MIT'
+description      'Installs/Configures bitcoind'
+long_description 'Installs/Configures bitcoind'
+version          '0.1.0'
