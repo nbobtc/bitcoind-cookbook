@@ -62,6 +62,7 @@ bash 'compile_berkeleydb_and_bitcoin' do
     ./autogen.sh
     ./configure #{node['bitcoind']['source']['configure_flags']} LDFLAGS="-L${BDB_PREFIX}/lib/" CPPFLAGS="-I${BDB_PREFIX}/include/" || ( cat config.log && false)
     make
+    make install
   EOH
 end
 
