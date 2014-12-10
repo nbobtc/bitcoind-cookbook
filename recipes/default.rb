@@ -5,10 +5,16 @@
 # Copyright (C) 2014 Joshua Estes
 #
 
+node['bitcoind']['packages'].each do |pkg|
+  package pkg do
+    action :install
+  end
+end
+
 # Create bitcoind user and group
 user node['bitcoind']['user'] do
   comment 'bitcoind system user'
-  gid node['bitcoind']['group']
+  #gid node['bitcoind']['group']
   system true
   shell '/bin/false'
 end
@@ -29,6 +35,25 @@ template "#{node['bitcoind']['datadir']}/bitcoin.conf" do
   variables(:options => node['bitcoind']['conf']['options'])
 end
 
-service 'bitcoin' do
-  action [:enable, :start]
+directory '/opt/bitcoin' do
+  user node['bitcoind']['user']
+  group node['bitcoind']['group']
 end
+
+git '/opt/bitcoin' do
+  repository node['bitcoind']['git']['repo']
+  action :sync
+end
+
+bash 'compile_bitcoind' do
+  cwd '/opt/bitcoin'
+  code <<-EOH
+  ./autogen.sh
+  ./configure #{node['bitcoind']['source']['configure_flags']}
+  make
+  EOH
+end
+
+#service 'bitcoin' do
+#  action [:enable, :start]
+#end
