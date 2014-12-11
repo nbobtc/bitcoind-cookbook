@@ -15,8 +15,8 @@ user node['bitcoind']['user'] do
   shell '/bin/false'
 end
 
-template "/etc/init/bitcoin.conf" do
-  source 'init.d/bitcoin.conf.erb'
+template "/etc/init/bitcoind.conf" do
+  source 'init/bitcoind.conf.erb'
   owner node['bitcoind']['user']
   group node['bitcoind']['group']
   mode 0600
