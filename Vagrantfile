@@ -10,11 +10,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["modifyvm", :id, "--memory", "2048"]
   end
-  config.vm.provision "shell", inline: "sudo apt-get update"
+  #config.vm.provision "shell", inline: "sudo apt-get update"
   config.vm.provision "chef_solo" do |chef|
     chef.log_level = 'debug'
     chef.run_list = [
-      'recipe[bitcoind]',
+      'recipe[bitcoind::package]',
     ]
   end
 end

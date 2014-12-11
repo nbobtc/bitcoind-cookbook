@@ -11,6 +11,9 @@
 #BITCOIND_CONFIGFILE="/etc/bitcoin/bitcoin.conf"
 #BITCOIND_DATADIR="/var/lib/bitcoind"
 
+# Install via `package` (recommended) or by `source`
+default['bitcoind']['install_via'] = 'package'
+
 # User/Group to run bitcoin as
 default['bitcoind']['user']  = 'bitcoin'
 default['bitcoind']['group'] = 'bitcoin'
@@ -25,7 +28,14 @@ default['bitcoind']['datadir'] = '/etc/bitcoin'
 
 # Template to use
 default['bitcoind']['conf']['template'] = 'bitcoin.conf.erb'
-default['bitcoind']['conf']['options'] = {'#test' => 'true','ssl'=>'1'}
+default['bitcoind']['conf']['options'] = {
+  '#testnet'    => '1',
+  'server'      => '1',
+  'rpcssl'      => '1',
+  'rpcport'     => '8333',
+  'rpcuser'     => 'changeme',
+  'rpcpassword' => 'YourSuperGreatPasswordNumber_DO_NOT_USE_THIS_OR_YOU_WILL_GET_ROBBED_385593',
+}
 
 # repository that is cloned to be compiled
 default['bitcoind']['git']['repo'] = 'https://github.com/bitcoin/bitcoin.git'
