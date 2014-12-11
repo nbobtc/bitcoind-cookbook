@@ -7,6 +7,14 @@
 
 include_recipe "bitcoind::#{node['bitcoind']['install_via']}"
 
+# Create bitcoind user and group
+user node['bitcoind']['user'] do
+  comment 'bitcoind system user'
+  #gid node['bitcoind']['group']
+  system true
+  shell '/bin/false'
+end
+
 ####
 #
 # /etc/bitcoin/bitcoin.conf file

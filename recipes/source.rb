@@ -11,14 +11,6 @@ node['bitcoind']['packages'].each do |pkg|
   end
 end
 
-# Create bitcoind user and group
-user node['bitcoind']['user'] do
-  comment 'bitcoind system user'
-  #gid node['bitcoind']['group']
-  system true
-  shell '/bin/false'
-end
-
 # Create data dir
 directory node['bitcoind']['datadir'] do
   owner node['bitcoind']['user']
