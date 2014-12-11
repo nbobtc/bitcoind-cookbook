@@ -15,10 +15,19 @@ user node['bitcoind']['user'] do
   shell '/bin/false'
 end
 
+template "/etc/init/bitcoin.conf" do
+  source 'init.d/bitcoin.conf.erb'
+  owner node['bitcoind']['user']
+  group node['bitcoind']['group']
+  mode 0600
+end
+
 ####
 #
 # /etc/bitcoin/bitcoin.conf file
 #
+directory "#{node['bitcoind']['datadir']}" do
+end
 template "#{node['bitcoind']['datadir']}/bitcoin.conf" do
   source node['bitcoind']['conf']['template']
   owner node['bitcoind']['user']
