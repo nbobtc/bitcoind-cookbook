@@ -20,7 +20,6 @@ default['bitcoind']['wallet']['enabled'] = true
 # Template to use
 default['bitcoind']['conf']['template'] = 'bitcoin.conf.erb'
 default['bitcoind']['conf']['options']  = {
-  'datadir'     => node['bitcoind']['datadir'],
   '#testnet'    => '1',
   'server'      => '1',
   '#rpcssl'      => '1',
