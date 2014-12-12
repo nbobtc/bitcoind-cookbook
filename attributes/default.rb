@@ -19,14 +19,7 @@ default['bitcoind']['wallet']['enabled'] = true
 
 # Template to use
 default['bitcoind']['conf']['template'] = 'bitcoin.conf.erb'
-default['bitcoind']['conf']['options']  = {
-  '#testnet'    => '1',
-  'server'      => '1',
-  '#rpcssl'      => '1',
-  '#rpcport'     => '8333',
-  'rpcuser'     => 'changeme',
-  'rpcpassword' => 'YourSuperGreatPasswordNumber_DO_NOT_USE_THIS_OR_YOU_WILL_GET_ROBBED_385593',
-}
+default['bitcoind']['conf']['options']  = {}
 
 # Packages needed to be installed to compile
 default['bitcoind']['packages'] = %w{ git build-essential libtool autotools-dev autoconf pkg-config libssl-dev libboost-all-dev }
