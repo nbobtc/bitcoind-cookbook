@@ -41,7 +41,7 @@ template '/etc/init/bitcoind.conf' do
     :datadir        => node['bitcoind']['datadir'],
     :wallet_enabled => node['bitcoind']['wallet']['enabled'],
   )
-  notifies :restart, 'service[bitcoind]', :immediately
+  notifies :restart, 'service[bitcoind]', :delayed
 end
 
 # /etc/bitcoin/bitcoin.conf
@@ -53,7 +53,7 @@ template node['bitcoind']['configfile'] do
   variables(
     :options => node['bitcoind']['conf']['options'],
   )
-  notifies :restart, 'service[bitcoind]', :immediately
+  notifies :restart, 'service[bitcoind]', :delayed
 end
 
 # bitcoind service
