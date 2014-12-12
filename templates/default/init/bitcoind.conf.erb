@@ -1,16 +1,19 @@
+####
+#
+# This file is managed by chef
+#
 description "Bitcoin Core Daemon"
 
 start on runlevel [2345]
 stop on starting rc RUNLEVEL=[016]
 
-env BITCOIND_BIN="/usr/bin/bitcoind"
-env BITCOIND_USER="bitcoin"
-env BITCOIND_GROUP="bitcoin"
-env BITCOIND_PIDDIR="/var/run/bitcoind"
-# upstart can't handle variables constructed with other variables
-env BITCOIND_PIDFILE="/var/run/bitcoind/bitcoind.pid"
-env BITCOIND_CONFIGFILE="/etc/bitcoin/bitcoin.conf"
-env BITCOIND_DATADIR="/var/lib/bitcoind"
+env BITCOIND_BIN="<%= @bin %>"
+env BITCOIND_USER="<%= @user %>"
+env BITCOIND_GROUP="<%= @group %>"
+env BITCOIND_PIDDIR="<%= @piddir %>"
+env BITCOIND_PIDFILE="<%= @pidfile %>"
+env BITCOIND_CONFIGFILE="<%= @configfile %>"
+env BITCOIND_DATADIR="<%= @datadir %>"
 
 expect fork
 
@@ -24,25 +27,26 @@ pre-start script
     # long after forking, leaving upstart to think everything started fine.
     # since this is a commonly encountered case on install, just check and
     # warn here.
-    if ! grep -qs '^rpcpassword=' "$BITCOIND_CONFIGFILE" ; then
-        echo "ERROR: You must set a secure rpcpassword to run bitcoind."
-        echo "The setting must appear in $BITCOIND_CONFIGFILE"
-        echo
-        echo "This password is security critical to securing wallets "
-        echo "and must not be the same as the rpcuser setting."
-        echo "You can generate a suitable random password using the following"
-        echo "command from the shell:"
-        echo
-        echo "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
-        echo
-        echo "It is also recommended that you also set alertnotify so you are "
-        echo "notified of problems:"
-        echo
-        echo "ie: alertnotify=echo %%s | mail -s \"Bitcoin Alert\"" \
-            "admin@foo.com"
-        echo
-        exit 1
-    fi
+
+    #if ! grep -qs '^rpcpassword=' "$BITCOIND_CONFIGFILE" ; then
+    #    echo "ERROR: You must set a secure rpcpassword to run bitcoind."
+    #    echo "The setting must appear in $BITCOIND_CONFIGFILE"
+    #    echo
+    #    echo "This password is security critical to securing wallets "
+    #    echo "and must not be the same as the rpcuser setting."
+    #    echo "You can generate a suitable random password using the following"
+    #    echo "command from the shell:"
+    #    echo
+    #    echo "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+    #    echo
+    #    echo "It is also recommended that you also set alertnotify so you are "
+    #    echo "notified of problems:"
+    #    echo
+    #    echo "ie: alertnotify=echo %%s | mail -s \"Bitcoin Alert\"" \
+    #        "admin@foo.com"
+    #    echo
+    #    exit 1
+    #fi
 
     mkdir -p "$BITCOIND_PIDDIR"
     chmod 0755 "$BITCOIND_PIDDIR"
@@ -51,6 +55,18 @@ pre-start script
     chmod 0660 "$BITCOIND_CONFIGFILE"
 end script
 
+<% if @wallet_enabled %>
+exec start-stop-daemon \
+    --start \
+    --pidfile "$BITCOIND_PIDFILE" \
+    --chuid $BITCOIND_USER:$BITCOIND_GROUP \
+    --exec "$BITCOIND_BIN" \
+    -- \
+    -pid="$BITCOIND_PIDFILE" \
+    -conf="$BITCOIND_CONFIGFILE" \
+    -datadir="$BITCOIND_DATADIR" \
+    -daemon
+<% else %>
 exec start-stop-daemon \
     --start \
     --pidfile "$BITCOIND_PIDFILE" \
@@ -62,4 +78,4 @@ exec start-stop-daemon \
     -datadir="$BITCOIND_DATADIR" \
     -disablewallet \
     -daemon
-
+<% end %>
