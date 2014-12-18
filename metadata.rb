@@ -1,5 +1,5 @@
 name             'bitcoind'
-version          '0.2.1'
+version          '0.2.2'
 maintainer       'Joshua Estes'
 maintainer_email 'Joshua@dSpaceLabs.com'
 license          'MIT'
