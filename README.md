@@ -9,7 +9,7 @@ require a bitcoin node.
 
 ## Supported Platforms
 
-- ubuntu
+- ubuntu 14.04
 
 ## Attributes
 
@@ -57,12 +57,6 @@ require a bitcoin node.
     <td><tt>/var/run/bitcoind/bitcoind.pid</tt></td>
   </tr>
   <tr>
-    <td><tt>['bitcoind']['configfile']</tt></td>
-    <td>string</td>
-    <td></td>
-    <td><tt>/etc/bitcoin/bitcoin.conf</tt></td>
-  </tr>
-  <tr>
     <td><tt>['bitcoind']['datadir']</tt></td>
     <td>string</td>
     <td></td>
@@ -75,13 +69,13 @@ require a bitcoin node.
     <td><tt>true</tt></td>
   </tr>
   <tr>
-    <td><tt>['bitcoind']['conf']['template']</tt></td>
+    <td><tt>['bitcoind']['config']['file']</tt></td>
     <td>string</td>
     <td></td>
-    <td><tt>bitcoin.conf.erb</tt></td>
+    <td><tt>/etc/bitcoin/bitcoin.conf</tt></td>
   </tr>
   <tr>
-    <td><tt>['bitcoind']['conf']['options']</tt></td>
+    <td><tt>['bitcoind']['config']['options']</tt></td>
     <td>hash</td>
     <td>Configures the options that are put into the bitcoin.conf file.</td>
     <td><tt>{}</tt></td>
@@ -95,9 +89,13 @@ Create a testnet node:
 ```json
 {
     "bitcoind": {
-        "conf": {
+        "config": {
             "options": {
-                "testnet": 1
+                "testnet": 1,
+                "rpcuser": "insecure_username",
+                "rpcpassword": "please_rob_me",
+                "rpcallowip": ["127.0.0.1", "192.168.1.1"],
+                "rpcport": 18332
             }
         }
     }
@@ -114,7 +112,7 @@ Include `bitcoind` in your node's `run_list`:
 ```json
 {
   "run_list": [
-    "recipe[bitcoind::default]"
+    "recipe[bitcoind]"
   ]
 }
 ```

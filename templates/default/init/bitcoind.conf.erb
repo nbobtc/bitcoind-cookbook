@@ -1,6 +1,7 @@
 ####
 #
 # This file is managed by chef
+# @see https://github.com/bitcoin/bitcoin/blob/master/contrib/init/bitcoind.conf
 #
 description "Bitcoin Core Daemon"
 
@@ -28,25 +29,25 @@ pre-start script
     # since this is a commonly encountered case on install, just check and
     # warn here.
 
-    #if ! grep -qs '^rpcpassword=' "$BITCOIND_CONFIGFILE" ; then
-    #    echo "ERROR: You must set a secure rpcpassword to run bitcoind."
-    #    echo "The setting must appear in $BITCOIND_CONFIGFILE"
-    #    echo
-    #    echo "This password is security critical to securing wallets "
-    #    echo "and must not be the same as the rpcuser setting."
-    #    echo "You can generate a suitable random password using the following"
-    #    echo "command from the shell:"
-    #    echo
-    #    echo "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
-    #    echo
-    #    echo "It is also recommended that you also set alertnotify so you are "
-    #    echo "notified of problems:"
-    #    echo
-    #    echo "ie: alertnotify=echo %%s | mail -s \"Bitcoin Alert\"" \
-    #        "admin@foo.com"
-    #    echo
-    #    exit 1
-    #fi
+    if ! grep -qs '^rpcpassword=' "$BITCOIND_CONFIGFILE" ; then
+        echo "ERROR: You must set a secure rpcpassword to run bitcoind."
+        echo "The setting must appear in $BITCOIND_CONFIGFILE"
+        echo
+        echo "This password is security critical to securing wallets "
+        echo "and must not be the same as the rpcuser setting."
+        echo "You can generate a suitable random password using the following"
+        echo "command from the shell:"
+        echo
+        echo "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+        echo
+        echo "It is also recommended that you also set alertnotify so you are "
+        echo "notified of problems:"
+        echo
+        echo "ie: alertnotify=echo %%s | mail -s \"Bitcoin Alert\"" \
+            "admin@foo.com"
+        echo
+        exit 1
+    fi
 
     mkdir -p "$BITCOIND_PIDDIR"
     chmod 0755 "$BITCOIND_PIDDIR"
@@ -65,7 +66,7 @@ exec start-stop-daemon \
     -pid="$BITCOIND_PIDFILE" \
     -conf="$BITCOIND_CONFIGFILE" \
     -datadir="$BITCOIND_DATADIR" \
-    -daemon
+    -daemon <%= @options %>
 <% else %>
 exec start-stop-daemon \
     --start \
@@ -76,6 +77,7 @@ exec start-stop-daemon \
     -pid="$BITCOIND_PIDFILE" \
     -conf="$BITCOIND_CONFIGFILE" \
     -datadir="$BITCOIND_DATADIR" \
-    -disablewallet \
-    -daemon
+    -daemon \
+    -disablewallet <%= @options %>
 <% end %>
+

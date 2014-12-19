@@ -3,6 +3,12 @@
 # Bitcoin configuration file, managed by chef, do not
 # edit by hand
 #
-<% @options.sort_by { |key, val| key }.each do |option, value| -%>
-<%= "#{option}=#{value}" %>
+<% @options.sort_by { |key, val| key }.each do |opt, val| -%>
+<% if val.kind_of?(Array) %>
+<% val.each do |x| -%>
+<%= "#{opt}=#{x}" %>
+<% end -%>
+<% else %>
+<%= "#{opt}=#{val}" %>
+<% end -%>
 <% end -%>

@@ -6,20 +6,19 @@
 # Install via `package` (recommended) or by `source`
 default['bitcoind']['install_via'] = 'package'
 
-default['bitcoind']['bin']        = '/usr/bin/bitcoind'
-default['bitcoind']['user']       = 'bitcoin'
-default['bitcoind']['group']      = 'bitcoin'
-default['bitcoind']['piddir']     = '/var/run/bitcoind'
-default['bitcoind']['pidfile']    = '/var/run/bitcoind/bitcoind.pid'
-default['bitcoind']['configfile'] = '/etc/bitcoin/bitcoin.conf'
-default['bitcoind']['datadir']    = '/var/lib/bitcoind'
+# All these options are used in the upstart script
+default['bitcoind']['bin']     = '/usr/bin/bitcoind' # Location of binary
+default['bitcoind']['user']    = 'bitcoin' # User to run bitcoind as
+default['bitcoind']['group']   = 'bitcoin' # Group to run bitcoind as
+default['bitcoind']['piddir']  = '/var/run/bitcoind' # Directory to place pid file
+default['bitcoind']['pidfile'] = '/var/run/bitcoind/bitcoind.pid' # Pid file
+default['bitcoind']['datadir'] = '/var/lib/bitcoind' # Location to store blockchain and other data
+default['bitcoind']['options'] = ''
 
-# Used in the init script
-default['bitcoind']['wallet']['enabled'] = true
+default['bitcoind']['wallet']['enabled'] = true # Enable wallet rpc operations
 
-# Template to use
-default['bitcoind']['conf']['template'] = 'bitcoin.conf.erb'
-default['bitcoind']['conf']['options']  = {}
+default['bitcoind']['config']['file'] = '/etc/bitcoin/bitcoin.conf' # Configuration file
+default['bitcoind']['config']['options']  = {} # Options to put into configuration file, see README
 
 # Packages needed to be installed to compile
 default['bitcoind']['packages'] = %w{ git build-essential libtool autotools-dev autoconf pkg-config libssl-dev libboost-all-dev }
